@@ -1,0 +1,37 @@
+digraph G {
+  graph [rankdir=TB, splines=true, nodesep=0.7, ranksep=0.75, fontname="DejaVu Sans", fontsize=11, pad=0.3, bgcolor="white"];
+  node  [shape=plaintext, fontname="DejaVu Sans", fontsize=10];
+  edge  [fontname="DejaVu Sans", fontsize=9, color="#444444"];
+  label=<<B>Mediator Pattern &#8212; CampusConnect Messenger (Messenger-like chat)</B><BR/><FONT POINT-SIZE="9">CSE 3206 Lab 3 &#183; Group 7</FONT>>; labelloc=t;
+  "ChatMediator" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" BGCOLOR="#E3EEFA" COLOR="#2B5C8A"><TR><TD ALIGN="CENTER"><FONT POINT-SIZE="9" COLOR="#2B5C8A">&laquo;interface&raquo; &laquo;Mediator&raquo;</FONT></TD></TR><TR><TD ALIGN="CENTER"><B><I>ChatMediator</I></B></TD></TR><HR/><TR><TD> </TD></TR><HR/><TR><TD ALIGN="LEFT">+ registerUser(user : User&amp;) : void</TD></TR><TR><TD ALIGN="LEFT">+ unregisterUser(userId) : void</TD></TR><TR><TD ALIGN="LEFT">+ sendDirect(from, toId, text) : DeliveryStatus</TD></TR><TR><TD ALIGN="LEFT">+ sendToGroup(from, groupId, text) : size_t</TD></TR><TR><TD ALIGN="LEFT">+ blockUser(blocker, blockedId) : void</TD></TR><TR><TD ALIGN="LEFT">+ presenceChanged(user) : void</TD></TR></TABLE>>];
+  "User" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" BGCOLOR="#EEE8F8" COLOR="#5B3F8C"><TR><TD ALIGN="CENTER"><FONT POINT-SIZE="9" COLOR="#5B3F8C">&laquo;abstract&raquo; &laquo;Colleague&raquo;</FONT></TD></TR><TR><TD ALIGN="CENTER"><B><I>User</I></B></TD></TR><HR/><TR><TD ALIGN="LEFT">- id_ : string</TD></TR><TR><TD ALIGN="LEFT">- name_ : string</TD></TR><TR><TD ALIGN="LEFT">- online_ : bool</TD></TR><TR><TD ALIGN="LEFT">- mediator_ : ChatMediator*</TD></TR><HR/><TR><TD ALIGN="LEFT">+ join(mediator : ChatMediator&amp;) : void</TD></TR><TR><TD ALIGN="LEFT">+ leave() : void</TD></TR><TR><TD ALIGN="LEFT">+ sendTo(toId, text) : DeliveryStatus</TD></TR><TR><TD ALIGN="LEFT">+ sendToGroup(groupId, text) : size_t</TD></TR><TR><TD ALIGN="LEFT">+ block(userId) : void</TD></TR><TR><TD ALIGN="LEFT">+ goOnline() / goOffline() : void</TD></TR><TR><TD ALIGN="LEFT">+ isAutomated() : bool  {virtual}</TD></TR><TR><TD ALIGN="LEFT">+ receive(message : const Message&amp;)  {abstract}</TD></TR></TABLE>>];
+  "MessengerServer" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" BGCOLOR="#FFF8E1" COLOR="#8A6A1F"><TR><TD ALIGN="CENTER"><FONT POINT-SIZE="9" COLOR="#8A6A1F">&laquo;ConcreteMediator&raquo;</FONT></TD></TR><TR><TD ALIGN="CENTER"><B>MessengerServer</B></TD></TR><HR/><TR><TD ALIGN="LEFT">- users_ : map&lt;string, User*&gt;</TD></TR><TR><TD ALIGN="LEFT">- groups_ : map&lt;string, vector&lt;string&gt;&gt;</TD></TR><TR><TD ALIGN="LEFT">- blocked_ : map&lt;string, set&lt;string&gt;&gt;</TD></TR><TR><TD ALIGN="LEFT">- pending_ : map&lt;string, vector&lt;Message&gt;&gt;</TD></TR><TR><TD ALIGN="LEFT">- history_ : vector&lt;Message&gt;</TD></TR><HR/><TR><TD ALIGN="LEFT">+ registerUser(user) / unregisterUser(id)</TD></TR><TR><TD ALIGN="LEFT">+ sendDirect(from, toId, text) : DeliveryStatus</TD></TR><TR><TD ALIGN="LEFT">+ sendToGroup(from, groupId, text) : size_t</TD></TR><TR><TD ALIGN="LEFT">+ blockUser(blocker, blockedId) : void</TD></TR><TR><TD ALIGN="LEFT">+ presenceChanged(user) : void</TD></TR><TR><TD ALIGN="LEFT">+ createGroup(groupId, memberIds) : void</TD></TR><TR><TD ALIGN="LEFT">+ pendingCount(userId) : size_t</TD></TR><TR><TD ALIGN="LEFT">+ history() : const vector&lt;Message&gt;&amp;</TD></TR><TR><TD ALIGN="LEFT">- deliver(recipient, message) : DeliveryStatus</TD></TR><TR><TD ALIGN="LEFT">- isBlocked(recipientId, senderId) : bool</TD></TR></TABLE>>];
+  "Member" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" BGCOLOR="#FFF8E1" COLOR="#8A6A1F"><TR><TD ALIGN="CENTER"><FONT POINT-SIZE="9" COLOR="#8A6A1F">&laquo;ConcreteColleague&raquo;</FONT></TD></TR><TR><TD ALIGN="CENTER"><B>Member</B></TD></TR><HR/><TR><TD ALIGN="LEFT">- out_ : std::ostream&amp;</TD></TR><TR><TD ALIGN="LEFT">- inbox_ : vector&lt;Message&gt;</TD></TR><HR/><TR><TD ALIGN="LEFT">+ receive(message) : void</TD></TR><TR><TD ALIGN="LEFT">+ inbox() : const vector&lt;Message&gt;&amp;</TD></TR></TABLE>>];
+  "SupportBot" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" BGCOLOR="#FFF8E1" COLOR="#8A6A1F"><TR><TD ALIGN="CENTER"><FONT POINT-SIZE="9" COLOR="#8A6A1F">&laquo;ConcreteColleague&raquo;</FONT></TD></TR><TR><TD ALIGN="CENTER"><B>SupportBot</B></TD></TR><HR/><TR><TD ALIGN="LEFT">- out_ : std::ostream&amp;</TD></TR><TR><TD ALIGN="LEFT">- ticketsOpened_ : int</TD></TR><HR/><TR><TD ALIGN="LEFT">+ receive(message) : void  (auto-reply)</TD></TR><TR><TD ALIGN="LEFT">+ isAutomated() : bool  = true</TD></TR><TR><TD ALIGN="LEFT">+ ticketsOpened() : int</TD></TR></TABLE>>];
+  "Message" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" BGCOLOR="#F2F2F2" COLOR="#666666"><TR><TD ALIGN="CENTER"><FONT POINT-SIZE="9" COLOR="#666666">&laquo;struct&raquo;</FONT></TD></TR><TR><TD ALIGN="CENTER"><B>Message</B></TD></TR><HR/><TR><TD ALIGN="LEFT">+ id : int</TD></TR><TR><TD ALIGN="LEFT">+ fromId, fromName : string</TD></TR><TR><TD ALIGN="LEFT">+ toId : string</TD></TR><TR><TD ALIGN="LEFT">+ groupId : string  (empty = direct)</TD></TR><TR><TD ALIGN="LEFT">+ text : string</TD></TR><TR><TD ALIGN="LEFT">+ automated : bool</TD></TR><HR/><TR><TD ALIGN="LEFT">+ isGroupMessage() : bool</TD></TR></TABLE>>];
+  "DeliveryStatus" [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="3" BGCOLOR="#F2F2F2" COLOR="#666666"><TR><TD><FONT POINT-SIZE="9" COLOR="#666666">&laquo;enumeration&raquo;</FONT></TD></TR><TR><TD><B>DeliveryStatus</B></TD></TR><HR/><TR><TD ALIGN="LEFT">Delivered</TD></TR><TR><TD ALIGN="LEFT">Queued</TD></TR><TR><TD ALIGN="LEFT">Blocked</TD></TR></TABLE>>];
+  "note" [shape=note, style=filled, fillcolor="#FFFDE7", color="#B59F3B", fontsize=9, label="Colleagues NEVER reference each other.\nMember and SupportBot talk only to\nChatMediator; MessengerServer owns all\nrouting, group, block and offline rules."];
+
+  { rank=same; "User"; "ChatMediator"; }
+  { rank=same; "Member"; "SupportBot"; "MessengerServer"; }
+  "Member" -> "SupportBot" [style=invis];
+
+  // generalization / realization (arrow points to the parent)
+  "User" -> "Member"     [dir=back, arrowtail=empty];
+  "User" -> "SupportBot" [dir=back, arrowtail=empty];
+  "ChatMediator" -> "MessengerServer" [dir=back, arrowtail=empty, style=dashed];
+
+  // Colleague knows its Mediator (1)
+  "User" -> "ChatMediator" [arrowhead=vee, label="  mediator_", headlabel="1", labeldistance=2.0];
+
+  // ConcreteMediator knows all colleagues (aggregation, non-owning)
+  "MessengerServer" -> "User" [dir=back, arrowtail=odiamond, arrowhead=vee, dir=both, label="users_", headlabel="0..*", labeldistance=2.0, constraint=false];
+
+  // data used in the conversation
+  "MessengerServer" -> "Message" [style=dashed, arrowhead=vee, label=" creates / stores"];
+  "MessengerServer" -> "DeliveryStatus" [style=dashed, arrowhead=vee, label=" returns"];
+  "Member" -> "note"     [style=dashed, arrowhead=none, color="#B59F3B"];
+  "SupportBot" -> "note" [style=dashed, arrowhead=none, color="#B59F3B"];
+  { rank=same; "note"; "DeliveryStatus"; "Message"; }
+  "note" -> "DeliveryStatus" -> "Message" [style=invis];
+}
