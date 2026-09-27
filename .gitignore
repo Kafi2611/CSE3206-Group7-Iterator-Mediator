@@ -1,0 +1,25 @@
+# Build output
+build/
+bin/
+cmake-build-*/
+out/
+*.exe
+*.o
+*.obj
+*.out
+*.a
+*.lib
+
+# IDE / editor
+.vscode/
+.idea/
+.vs/
+*.cbp
+*.layout
+*.depend
+*.swp
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini

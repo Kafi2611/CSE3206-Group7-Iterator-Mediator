@@ -1,0 +1,27 @@
+# Builds the project and runs all unit tests on every push / pull request.
+name: Build & Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Configure (CMake)
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Run unit tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Run demos
+        run: |
+          if [ -f build/iterator_demo ]; then ./build/iterator_demo; fi
+          if [ -f build/mediator_demo ]; then ./build/mediator_demo; fi
